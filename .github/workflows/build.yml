@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
           for i in $(seq 1 5); do
             sudo apt-get install -y \
               gcc-aarch64-linux-gnu libssl-dev libelf-dev dwarves flex bison bc \
-              cpio xz-utils && break || sleep 10
+              cpio xz-utils ccache && break || sleep 10
           done
 
       - name: Fetch AOSP clang r416183b
@@ -33,15 +33,35 @@ jobs:
             "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android12-release/clang-r416183b.tar.gz" \
             -o clang-r416183b.tar.gz
           tar xzf clang-r416183b.tar.gz
-          echo "$PWD/bin" >> $GITHUB_PATH
+
+      - name: Setup ccache wrappers for clang
+        run: |
+          mkdir -p ccache-bin
+          for t in clang clang++ ld.lld llvm-ar llvm-nm llvm-objcopy llvm-objdump llvm-strip; do
+            ln -sf /usr/bin/ccache ccache-bin/$t
+          done
+          echo "$PWD/ccache-bin" >> $GITHUB_PATH
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/ccache
+          key: ccache-mt8183-${{ github.sha }}
+          restore-keys: |
+            ccache-mt8183-
 
       - name: Build
+        env:
+          CCACHE_DIR: /tmp/ccache
+          CCACHE_MAXSIZE: 10G
         run: |
-          export PATH="$PWD/prebuilts/clang/host/linux-x86/bin:$PATH"
+          export PATH="$PWD/ccache-bin:$PWD/prebuilts/clang/host/linux-x86/bin:$PATH"
+          ccache -z
           make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
             mt8183-alps_defconfig
           make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
             -k -j$(nproc) Image dtbs
+          ccache -s
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
