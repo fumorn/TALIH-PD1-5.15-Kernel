@@ -1,0 +1,53 @@
+name: Build MT8183 Image
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build deps (apt with retry)
+        run: |
+          set -e
+          for i in $(seq 1 5); do
+            sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout=120 && break || sleep 10
+          done
+          for i in $(seq 1 5); do
+            sudo apt-get install -y \
+              gcc-aarch64-linux-gnu libssl-dev libelf-dev dwarves flex bison bc \
+              cpio xz-utils && break || sleep 10
+          done
+
+      - name: Fetch AOSP clang r416183b
+        run: |
+          mkdir -p prebuilts/clang/host/linux-x86
+          cd prebuilts/clang/host/linux-x86
+          curl -L --retry 5 --retry-delay 10 \
+            "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/r416183b/clang-r416183b.tar.gz" \
+            -o clang-r416183b.tar.gz
+          tar xzf clang-r416183b.tar.gz
+          echo "$PWD/bin" >> $GITHUB_PATH
+
+      - name: Build
+        run: |
+          export PATH="$PWD/prebuilts/clang/host/linux-x86/bin:$PATH"
+          make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
+            mt8183-alps_defconfig
+          make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
+            -j$(nproc) Image dtbs
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Image-TALIH-PD1-515
+          path: |
+            arch/arm64/boot/Image
+            arch/arm64/boot/dts/mediatek/mt8183-alps.dtb
+          retention-days: 14
