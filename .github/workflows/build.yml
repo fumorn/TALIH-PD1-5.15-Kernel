@@ -29,7 +29,7 @@ jobs:
         run: |
           mkdir -p prebuilts/clang/host/linux-x86
           cd prebuilts/clang/host/linux-x86
-          curl -L --retry 5 --retry-delay 10 \
+          curl -L -C - --retry 15 --retry-delay 3 --retry-all-errors \
             "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android12-release/clang-r416183b.tar.gz" \
             -o clang-r416183b.tar.gz
           tar xzf clang-r416183b.tar.gz
