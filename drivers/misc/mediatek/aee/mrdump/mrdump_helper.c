@@ -354,6 +354,31 @@ static void aee_base_addrs_init(void)
 }
 #else /* #ifdef MODULE*/
 
+unsigned long aee_get_kn_off(void)
+{
+	return 0;
+}
+
+unsigned long aee_get_kns_off(void)
+{
+	return 0;
+}
+
+unsigned long aee_get_km_off(void)
+{
+	return 0;
+}
+
+unsigned long aee_get_ktt_off(void)
+{
+	return 0;
+}
+
+unsigned long aee_get_kti_off(void)
+{
+	return 0;
+}
+
 unsigned long aee_get_stext(void)
 {
 	return (unsigned long)_stext;
