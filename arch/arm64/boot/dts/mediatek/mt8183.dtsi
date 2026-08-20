@@ -386,7 +386,7 @@
 			#clock-cells = <1>;
 		};
 
-		pio: pinctrl@10005000 {
+		pio: gpio: pinctrl@10005000 {
 			compatible = "mediatek,mt8183-pinctrl";
 			reg = <0 0x10005000 0 0x1000>,
 			      <0 0x11f20000 0 0x1000>,
@@ -642,7 +642,7 @@
 			status = "disabled";
 		};
 
-		uart0: serial@11002000 {
+		uart0: apuart0: serial@11002000 {
 			compatible = "mediatek,mt8183-uart",
 				     "mediatek,mt6577-uart";
 			reg = <0 0x11002000 0 0x1000>;
@@ -1133,7 +1133,7 @@
 			status = "disabled";
 		};
 
-		mmc1: mmc@11240000 {
+		mmc1: msdc1: mmc@11240000 {
 			compatible = "mediatek,mt8183-mmc";
 			reg = <0 0x11240000 0 0x1000>,
 			      <0 0x11e10000 0 0x1000>;

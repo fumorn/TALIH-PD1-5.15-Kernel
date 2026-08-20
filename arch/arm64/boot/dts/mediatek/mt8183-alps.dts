@@ -8,6 +8,7 @@
 
 /dts-v1/;
 #include "mt8183.dtsi"
+#include "mt8183-alps-fixup.dtsi"
 
 / {
 	model = "MediaTek MT8183 Alps";
@@ -22,11 +23,11 @@
 		reg = <0 0x40000000 0 0x80000000>;
 	};
 
-	chosen {
+	chosen: chosen {
 		stdout-path = "serial0:921600n8";
 	};
 
-	reserved-memory {
+	reserved_memory: reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;

@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Minimal placeholder nodes required so the shipping (4.14-era) dtbo
+ * overlay can resolve its __fixups__ during LK boot. These node paths and
+ * labels mirror the 4.14 MT6771 DT. Real hardware configuration is
+ * re-added on the 5.15 stack later; for now this only lets the kernel
+ * get past LK's ufdt_overlay stage and boot.
+ */
+
+/ {
+	odm: odm {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+
+	accdet: accdet {
+	};
+
+	charger: charger {
+	};
+
+	lk_charger: lk_charger {
+	};
+
+	dsi_te: dsi_te {
+	};
+
+	gpio_usage_mapping: gpio {
+	};
+
+	audgpio: mt_soc_dl1_pcm@11220000 {
+		compatible = "mediatek,mt_soc_pcm_dl1";
+		reg = <0 0x11220000 0 0x1000>;
+	};
+
+	consys: consys@18070000 {
+		compatible = "mediatek,mt8183-consys";
+		reg = <0 0x18070000 0 0x1000>;
+	};
+
+	irtx_pwm: irtx_pwm {
+	};
+
+	kd_camera_hw1: kd_camera_hw1@1a040000 {
+		reg = <0 0x1a040000 0 0x1000>;
+	};
+
+	keypad: kp@10010000 {
+		reg = <0 0x10010000 0 0x1000>;
+	};
+
+	md1_sim1_hot_plug_eint: md1_sim1_hot_plug_eint {
+	};
+
+	md_auxadc: md_auxadc {
+	};
+
+	mt6370_pmu: mt6370_pmu_dts {
+	};
+
+	mt6370_typec: type_c_port0 {
+	};
+
+	otg_iddig: otg_iddig {
+	};
+
+	pmic_clock_buffer_ctrl: pmic_clock_buffer_ctrl {
+	};
+
+	rt9465_slave_chr: rt9465_slave_chr {
+	};
+
+	subpmic_pmu_eint: mt6370_pmu_eint {
+	};
+
+	tcpc_pd: mt6370_pd_eint {
+	};
+
+	touch: touch {
+	};
+};
+
+&pwrap {
+	main_pmic: mt6358-pmic {
+		compatible = "mediatek,mt6358";
+
+		mt6358regulator {
+			compatible = "mediatek,mt6358-regulator";
+
+			mt_pmic_vcama1_ldo_reg: ldo_vcama1 {
+			};
+			mt_pmic_vcama2_ldo_reg: ldo_vcama2 {
+			};
+			mt_pmic_vcamd_ldo_reg: ldo_vcamd {
+			};
+			mt_pmic_vcamio_ldo_reg: ldo_vcamio {
+			};
+			mt_pmic_vldo28_ldo_reg: ldo_vldo28 {
+			};
+			mt_pmic_vsim1_ldo_reg: ldo_vsim1 {
+			};
+			mt_pmic_vsim2_ldo_reg: ldo_vsim2 {
+			};
+		};
+	};
+};
