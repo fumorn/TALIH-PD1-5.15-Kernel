@@ -37,7 +37,7 @@ jobs:
       - name: Setup ccache wrappers for clang
         run: |
           mkdir -p ccache-bin
-          for t in clang clang++ ld.lld llvm-ar llvm-nm llvm-objcopy llvm-objdump llvm-strip; do
+          for t in clang clang++; do
             ln -sf /usr/bin/ccache ccache-bin/$t
           done
           echo "$PWD/ccache-bin" >> $GITHUB_PATH
