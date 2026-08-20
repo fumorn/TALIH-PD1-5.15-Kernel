@@ -41,7 +41,7 @@ jobs:
           make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
             mt8183-alps_defconfig
           make ARCH=arm64 LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu- \
-            -j$(nproc) Image dtbs
+            -k -j$(nproc) Image dtbs
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
