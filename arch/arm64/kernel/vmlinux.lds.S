@@ -151,7 +151,7 @@ SECTIONS
 		*(.dynsym .dynstr .hash .gnu.hash)
 	}
 
-	. = KIMAGE_VADDR;
+	. = KIMAGE_VADDR + TEXT_OFFSET;
 
 	.head.text : {
 		_text = .;
