@@ -30,7 +30,7 @@ jobs:
           mkdir -p prebuilts/clang/host/linux-x86
           cd prebuilts/clang/host/linux-x86
           curl -L --retry 5 --retry-delay 10 \
-            "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/r416183b/clang-r416183b.tar.gz" \
+            "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android12-release/clang-r416183b.tar.gz" \
             -o clang-r416183b.tar.gz
           tar xzf clang-r416183b.tar.gz
           echo "$PWD/bin" >> $GITHUB_PATH
