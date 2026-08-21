@@ -26,6 +26,14 @@ jobs:
           done
 
       - name: Fetch AOSP clang r416183b
+        uses: actions/cache@v4
+        id: cache-clang
+        with:
+          path: prebuilts/clang/host/linux-x86/clang-r416183b
+          key: clang-r416183b-v1
+
+      - name: Fetch AOSP clang r416183b (download)
+        if: steps.cache-clang.outputs.cache-hit != 'true'
         run: |
           mkdir -p prebuilts/clang/host/linux-x86
           cd prebuilts/clang/host/linux-x86
@@ -54,6 +62,8 @@ jobs:
         env:
           CCACHE_DIR: /tmp/ccache
           CCACHE_MAXSIZE: 10G
+          CCACHE_COMPILERCHECK: content
+          CCACHE_SLOPPINESS: file_macro,time_macros
         run: |
           export PATH="$PWD/ccache-bin:$PWD/prebuilts/clang/host/linux-x86/bin:$PATH"
           ccache -z
