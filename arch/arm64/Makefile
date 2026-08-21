@@ -131,11 +131,6 @@ endif
 # Default value
 head-y		:= arch/arm64/kernel/head.o
 
-# The byte offset of the kernel image in RAM from the start of RAM.
-# MT7771/MT8183 bootchain (LK/ATF) expects the legacy 512KB text offset.
-TEXT_OFFSET	:= 0x00080000
-export	TEXT_OFFSET
-
 ifeq ($(CONFIG_KASAN_SW_TAGS), y)
 KASAN_SHADOW_SCALE_SHIFT := 4
 else ifeq ($(CONFIG_KASAN_GENERIC), y)
