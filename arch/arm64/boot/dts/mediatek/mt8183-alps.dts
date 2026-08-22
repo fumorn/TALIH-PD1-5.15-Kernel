@@ -25,6 +25,7 @@
 
 	chosen: chosen {
 		stdout-path = "serial0:921600n8";
+		bootargs = "console=ttyS0,921600n8";
 	};
 
 	reserved_memory: reserved-memory {
