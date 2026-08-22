@@ -25,7 +25,7 @@
 
 	chosen: chosen {
 		stdout-path = "serial0:921600n8";
-		bootargs = "console=ttyS0,921600n8 initcall_debug loglevel=8";
+		bootargs = "initcall_debug loglevel=8 console=ram";
 	};
 
 	reserved_memory: reserved-memory {

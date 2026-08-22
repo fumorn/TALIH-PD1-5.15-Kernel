@@ -1510,14 +1510,18 @@ static int __ref kernel_init(void *unused)
 	wait_for_completion(&kthreadd_done);
 
 	kernel_init_freeable();
+	pr_info("DBG-BOOT: back from kernel_init_freeable\n");
 	/* need to finish all async __init code before freeing the memory */
 	async_synchronize_full();
 	kprobe_free_init_mem();
 	ftrace_free_init_mem();
 	kgdb_free_init_mem();
 	exit_boot_config();
+	pr_info("DBG-BOOT: before free_initmem\n");
 	free_initmem();
+	pr_info("DBG-BOOT: after free_initmem\n");
 	mark_readonly();
+	pr_info("DBG-BOOT: after mark_readonly\n");
 
 	/*
 	 * Kernel mappings are now finalized - update the userspace page-table
@@ -1533,6 +1537,8 @@ static int __ref kernel_init(void *unused)
 	do_sysctl_args();
 
 	if (ramdisk_execute_command) {
+		pr_info("DBG-BOOT: Run %s as init process\n",
+			ramdisk_execute_command);
 		ret = run_init_process(ramdisk_execute_command);
 		if (!ret)
 			return 0;
@@ -1623,7 +1629,9 @@ static noinline void __init kernel_init_freeable(void)
 	kunit_run_all_tests();
 
 	wait_for_initramfs();
+	pr_info("DBG-BOOT: after wait_for_initramfs\n");
 	console_on_rootfs();
+	pr_info("DBG-BOOT: after console_on_rootfs\n");
 
 	/*
 	 * check if there is an early userspace init.  If yes, let it do all
@@ -1631,8 +1639,11 @@ static noinline void __init kernel_init_freeable(void)
 	 */
 	if (init_eaccess(ramdisk_execute_command) != 0) {
 		ramdisk_execute_command = NULL;
+		pr_info("DBG-BOOT: no early userspace, prepare_namespace\n");
 		prepare_namespace();
 	}
+	pr_info("DBG-BOOT: init_eaccess done, cmd=%s\n",
+		ramdisk_execute_command ?: "(null)");
 
 	/*
 	 * Ok, we have completed the initial bootup, and
@@ -1644,4 +1655,5 @@ static noinline void __init kernel_init_freeable(void)
 	 */
 
 	integrity_load_keys();
+	pr_info("DBG-BOOT: after integrity_load_keys\n");
 }
