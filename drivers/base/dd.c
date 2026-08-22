@@ -561,6 +561,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
 
 	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
 		 drv->bus->name, __func__, drv->name, dev_name(dev));
+	pr_info("bus-probe: driver %s device %s (temporary debug)\n",
+		drv->name, dev_name(dev));
 	if (!list_empty(&dev->devres_head)) {
 		dev_crit(dev, "Resources present before probing\n");
 		ret = -EBUSY;
