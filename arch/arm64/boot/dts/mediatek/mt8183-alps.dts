@@ -44,6 +44,14 @@
 	status = "okay";
 };
 
+/* MT6771 sil: apmixedsys register layout differs from mt8183; clk-mt8183
+ * apmixed probe reads wrong regs -> external abort. Use plain syscon so the
+ * clk driver does not probe it (PLLs stay at LK-configured rates for now).
+ */
+&apmixedsys {
+	compatible = "syscon";
+};
+
 &ssusb {
 	status = "okay";
 	dr_mode = "peripheral";
