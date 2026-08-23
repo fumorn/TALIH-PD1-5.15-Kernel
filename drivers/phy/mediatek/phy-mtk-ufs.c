@@ -166,6 +166,7 @@ static int ufs_mtk_phy_power_on(struct phy *generic_phy)
 		return ret;
 
 	ufs_mtk_phy_set_active(phy);
+	dev_info(phy->dev, "UFSDBG: mphy power_on done\n");
 	return 0;
 }
 

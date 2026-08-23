@@ -636,6 +636,7 @@ static int ufs_mtk_bind_mphy(struct ufs_hba *hba)
 	if (err == -ENODEV)
 		err = 0;
 
+	dev_info(dev, "UFSDBG: bind_mphy mphy=%p err=%d\n", host->mphy, err);
 	return err;
 }
 
@@ -1101,6 +1102,8 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
 			ufs_mtk_mcq_disable_irq(hba);
 
 	} else if (on && status == POST_CHANGE) {
+		dev_info(hba->dev, "UFSDBG: setup_clocks on/post mphy=%p\n",
+			 host->mphy);
 		phy_power_on(host->mphy);
 		ufs_mtk_setup_ref_clk(hba, on);
 		ufs_mtk_boost_crypt(hba, on);
@@ -3114,6 +3117,8 @@ static int ufs_mtk_link_startup_notify(struct ufs_hba *hba,
 		break;
 	}
 
+	dev_info(hba->dev, "UFSDBG: link_startup stage=%d ret=%d ip_ver=0x%x\n",
+		 stage, ret, host->ip_ver);
 	return ret;
 }
 
