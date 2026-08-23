@@ -20,7 +20,8 @@
 #define UFSPHY_CLKS_CNT    2
 
 /* mphy register and offsets */
-#define MP_GLB_DIG_8C               0x008C
+/* MT6771 MPHY layout: global regs live in the 0xA000 page */
+#define MP_GLB_DIG_8C               0xA08C
 #define FRC_PLL_ISO_EN              BIT(8)
 #define PLL_ISO_EN                  BIT(9)
 #define FRC_FRC_PWR_ON              BIT(10)
@@ -33,7 +34,7 @@
 #define FRC_RX_SQ_EN                BIT(0)
 #define RX_SQ_EN                    BIT(1)
 
-#define MP_LN_RX_44                 0xB044
+#define MP_LN_RX_44                 0xA044
 #define FRC_CDR_PWR_ON              BIT(17)
 #define CDR_PWR_ON                  BIT(18)
 #define FRC_CDR_ISO_EN              BIT(19)
