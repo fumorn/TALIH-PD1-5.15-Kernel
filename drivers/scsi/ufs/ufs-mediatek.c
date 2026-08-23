@@ -593,9 +593,15 @@ static int ufs_mtk_hce_enable_notify(struct ufs_hba *hba,
 			hba->ahit = 0;
 		}
 
-		ufshcd_writel(hba,
-			(ufshcd_readl(hba, REG_UFS_XOUFS_CTRL) | 0x80),
-			REG_UFS_XOUFS_CTRL);
+		/* MT6771 (legacy IP): XOUFS_CTRL bit7 request must stay off;
+		 * 4.14 only clears XOUFS_ST for such chips. Setting it mutes
+		 * the device refclk.
+		 */
+		if (of_property_read_bool(hba->dev->of_node,
+					  "mediatek,ufs-xoufs-ctrl-req"))
+			ufshcd_writel(hba,
+				(ufshcd_readl(hba, REG_UFS_XOUFS_CTRL) | 0x80),
+				REG_UFS_XOUFS_CTRL);
 	}
 
 	return 0;
