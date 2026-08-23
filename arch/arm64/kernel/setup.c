@@ -339,6 +339,10 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
 
 	arm64_memblock_init();
 
+	pr_info("DBG-PHYS: _text=%#llx kimage_vaddr=%#llx kimage_voffset=%#llx memstart=%#llx\n",
+		(unsigned long long)&_text, kimage_vaddr, kimage_voffset,
+		(unsigned long long)memstart_addr);
+
 	paging_init();
 
 	acpi_table_upgrade();
