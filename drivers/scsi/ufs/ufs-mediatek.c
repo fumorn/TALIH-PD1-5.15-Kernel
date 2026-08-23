@@ -3845,6 +3845,8 @@ skip_phy:
 	err = ufshcd_pltfrm_init(pdev, &ufs_hba_mtk_vops);
 	if (err) {
 		dev_info(dev, "probe failed %d\n", err);
+		if (err == -EPROBE_DEFER)
+			WARN_ON(1);
 		goto out;
 	}
 
