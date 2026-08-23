@@ -140,13 +140,6 @@
 		reg = <0 0x11270000 0 0x2300>;
 		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
 
-		clocks = <&infracfg CLK_INFRA_UFS>,
-			 <&infracfg CLK_INFRA_UNIPRO_SCK>,
-			 <&infracfg CLK_INFRA_UFS_MP_SAP_BCLK>,
-			 <&infracfg CLK_INFRA_AES_UFSFDE>;
-		clock-names = "ufs", "unipro_sysclk", "ufs_mp_sap_bclk",
-			      "crypt_infra";
-		freq-table-hz = <0 0>, <0 0>, <0 0>, <0 0>;
 		lanes-per-direction = <1>;
 		mediatek,ufs-disable-ah8;
 	};
