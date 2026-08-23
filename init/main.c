@@ -1628,7 +1628,9 @@ static noinline void __init kernel_init_freeable(void)
 
 	kunit_run_all_tests();
 
-	wait_for_initramfs();
+	/* DBG: synchronous unpack already done in populate_rootfs, skip wait */
+	pr_info("DBG-BOOT: skip wait_for_initramfs (sync unpack)\n");
+	/* wait_for_initramfs(); */
 	pr_info("DBG-BOOT: after wait_for_initramfs\n");
 	pr_info("DBG-BOOT: skip console_on_rootfs (temporary bypass)\n");
 	/* console_on_rootfs(); -- bypassed: crashes filp_open("/dev/console") */
