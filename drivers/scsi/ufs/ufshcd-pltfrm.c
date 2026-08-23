@@ -331,12 +331,14 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 	mmio_base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(mmio_base)) {
 		err = PTR_ERR(mmio_base);
+		dev_info(dev, "DBG-UFS: ioremap failed %d\n", err);
 		goto out;
 	}
 
 	irq = platform_get_irq(pdev, 0);
 	if (irq < 0) {
 		err = irq;
+		dev_info(dev, "DBG-UFS: platform_get_irq(0)=%d\n", irq);
 		goto out;
 	}
 
@@ -365,7 +367,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
 
 	err = ufshcd_init(hba, mmio_base, irq);
 	if (err) {
-		dev_err(dev, "Initialization failed\n");
+		dev_err(dev, "DBG-UFS: ufshcd_init failed %d\n", err);
+		WARN_ON(err == -EPROBE_DEFER);
 		goto dealloc_host;
 	}
 
