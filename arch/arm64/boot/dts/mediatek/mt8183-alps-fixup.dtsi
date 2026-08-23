@@ -132,15 +132,31 @@
 
 	touch: touch {
 	};
+
+	/* UFS power rails: kept on by boot firmware, modelled as fixed for now */
+	reg_va09_fixed: regulator-va09-fixed {
+		compatible = "regulator-fixed";
+		regulator-name = "va09";
+		regulator-min-microvolt = <900000>;
+		regulator-max-microvolt = <900000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	reg_vemc_fixed: regulator-vemc-fixed {
+		compatible = "regulator-fixed";
+		regulator-name = "vemc";
+		regulator-min-microvolt = <2900000>;
+		regulator-max-microvolt = <2900000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
 };
 
 &{/soc} {
 	ufs_mphy: ufs_mphy@11fa0000 {
 		compatible = "mediatek,mt8183-ufsphy";
 		reg = <0 0x11fa0000 0 0xc000>;
-		clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-			 <&infracfg CLK_INFRA_UFS_MP_SAP_BCLK>;
-		clock-names = "unipro", "mp";
 		#phy-cells = <0>;
 	};
 
@@ -149,16 +165,12 @@
 		reg = <0 0x11270000 0 0x2300>;
 		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
 
-		clocks = <&infracfg CLK_INFRA_UFS>,
-			 <&infracfg CLK_INFRA_UNIPRO_SCK>,
-			 <&infracfg CLK_INFRA_UFS_MP_SAP_BCLK>,
-			 <&infracfg CLK_INFRA_AES_UFSFDE>;
-		clock-names = "ufs", "unipro_sysclk", "ufs_mp_sap_bclk",
-			      "crypt_infra";
-		freq-table-hz = <0 0>, <0 0>, <0 0>, <0 0>;
 		phys = <&ufs_mphy>;
+		vcc-supply = <&reg_vemc_fixed>;
+		va09-supply = <&reg_va09_fixed>;
 		lanes-per-direction = <1>;
 		mediatek,ufs-disable-ah8;
+		mediatek,ufs-support-va09;
 	};
 };
 
