@@ -697,8 +697,13 @@ done:
 	 * If the initrd region is overlapped with crashkernel reserved region,
 	 * free only memory that is not part of crashkernel region.
 	 */
-	if (!do_retain_initrd && initrd_start && !kexec_free_initrd())
+	if (!do_retain_initrd && initrd_start && !kexec_free_initrd()) {
+		phys_addr_t pa = virt_to_phys((void *)initrd_start);
+		pr_info("DBG-INITRD: freeing %px-%px pa=%pa size=%ldK\n",
+			(void *)initrd_start, (void *)initrd_end, &pa,
+			(initrd_end - initrd_start) >> 10);
 		free_initrd_mem(initrd_start, initrd_end);
+	}
 	pr_info("DBG-INITRD: after free\n");
 	initrd_start = 0;
 	initrd_end = 0;
