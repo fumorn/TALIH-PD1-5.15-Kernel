@@ -328,13 +328,18 @@ static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_
  */
 static int deferred_probe_initcall(void)
 {
+	pr_info("DBG-DEFER-INIT: enter\n");
 	debugfs_create_file("devices_deferred", 0444, NULL, NULL,
 			    &deferred_devs_fops);
+	pr_info("DBG-DEFER-INIT: debugfs ready\n");
 
 	driver_deferred_probe_enable = true;
+	pr_info("DBG-DEFER-INIT: trigger first pass\n");
 	driver_deferred_probe_trigger();
+	pr_info("DBG-DEFER-INIT: flush first pass\n");
 	/* Sort as many dependencies as possible before exiting initcalls */
 	flush_work(&deferred_probe_work);
+	pr_info("DBG-DEFER-INIT: first pass complete\n");
 	initcalls_done = true;
 
 	if (!IS_ENABLED(CONFIG_MODULES))
@@ -345,7 +350,9 @@ static int deferred_probe_initcall(void)
 	 * that is optional
 	 */
 	driver_deferred_probe_trigger();
+	pr_info("DBG-DEFER-INIT: flush second pass\n");
 	flush_work(&deferred_probe_work);
+	pr_info("DBG-DEFER-INIT: second pass complete\n");
 
 	if (driver_deferred_probe_timeout > 0) {
 		schedule_delayed_work(&deferred_probe_timeout_work,
