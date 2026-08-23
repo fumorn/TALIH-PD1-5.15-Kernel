@@ -699,10 +699,13 @@ done:
 	 */
 	if (!do_retain_initrd && initrd_start && !kexec_free_initrd())
 		free_initrd_mem(initrd_start, initrd_end);
+	pr_info("DBG-INITRD: after free\n");
 	initrd_start = 0;
 	initrd_end = 0;
 
+	pr_info("DBG-INITRD: before flush_delayed_fput\n");
 	flush_delayed_fput();
+	pr_info("DBG-INITRD: after flush_delayed_fput\n");
 }
 
 static ASYNC_DOMAIN_EXCLUSIVE(initramfs_domain);
