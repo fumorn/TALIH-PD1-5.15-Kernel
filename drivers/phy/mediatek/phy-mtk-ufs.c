@@ -91,7 +91,10 @@ static int ufs_mtk_phy_clk_init(struct ufs_mtk_phy *phy)
 
 	clks[0].id = "unipro";
 	clks[1].id = "mp";
-	return devm_clk_bulk_get(dev, UFSPHY_CLKS_CNT, clks);
+	/* MT6771 boot firmware keeps these gates on; make them optional so
+	 * the phy can still be powered without DT clock references.
+	 */
+	return devm_clk_bulk_get_optional(dev, UFSPHY_CLKS_CNT, clks);
 }
 
 static void ufs_mtk_phy_set_active(struct ufs_mtk_phy *phy)

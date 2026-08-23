@@ -157,9 +157,6 @@
 	ufs_mphy: ufs_mphy@11fa0000 {
 		compatible = "mediatek,mt8183-ufsphy";
 		reg = <0 0x11fa0000 0 0xc000>;
-		clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-			 <&infracfg CLK_INFRA_UFS_MP_SAP_BCLK>;
-		clock-names = "unipro", "mp";
 		#phy-cells = <0>;
 	};
 
