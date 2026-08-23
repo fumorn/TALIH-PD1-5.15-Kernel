@@ -1520,7 +1520,8 @@ static int __ref kernel_init(void *unused)
 	pr_info("DBG-BOOT: before free_initmem\n");
 	free_initmem();
 	pr_info("DBG-BOOT: after free_initmem\n");
-	mark_readonly();
+	pr_info("DBG-BOOT: skip mark_readonly (bypass)\n");
+	/* mark_readonly(); */
 	pr_info("DBG-BOOT: after mark_readonly\n");
 
 	/*
