@@ -1630,8 +1630,9 @@ static noinline void __init kernel_init_freeable(void)
 
 	wait_for_initramfs();
 	pr_info("DBG-BOOT: after wait_for_initramfs\n");
-	console_on_rootfs();
-	pr_info("DBG-BOOT: after console_on_rootfs\n");
+	pr_info("DBG-BOOT: skip console_on_rootfs (temporary bypass)\n");
+	/* console_on_rootfs(); -- bypassed: crashes filp_open("/dev/console") */
+	pr_info("DBG-BOOT: after console skip\n");
 
 	/*
 	 * check if there is an early userspace init.  If yes, let it do all
