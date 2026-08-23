@@ -734,11 +734,13 @@ EXPORT_SYMBOL_GPL(wait_for_initramfs);
 
 static int __init populate_rootfs(void)
 {
-	initramfs_cookie = async_schedule_domain(do_populate_rootfs, NULL,
-						 &initramfs_domain);
+	/* DBG: synchronous unpack - bypass async worker handoff (crash at
+	 * T9->T1 wakeup after flush_delayed_fput on mt6771).
+	 */
+	pr_info("DBG-INITRD: synchronous unpack start\n");
+	do_populate_rootfs(NULL, 0);
+	pr_info("DBG-INITRD: synchronous unpack done\n");
 	usermodehelper_enable();
-	if (!initramfs_async)
-		wait_for_initramfs();
 	return 0;
 }
 rootfs_initcall(populate_rootfs);
