@@ -3103,6 +3103,7 @@ static int ufs_mtk_post_link(struct ufs_hba *hba)
 static int ufs_mtk_link_startup_notify(struct ufs_hba *hba,
 				       enum ufs_notify_change_status stage)
 {
+	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
 	int ret = 0;
 
 	switch (stage) {
