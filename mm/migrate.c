@@ -3293,6 +3293,8 @@ static int __init migrate_on_reclaim_init(void)
 {
 	int ret;
 
+	pr_info("DBG-MM: migrate_on_reclaim_init bypassed\n");
+	return 0;
 	ret = cpuhp_setup_state_nocalls(CPUHP_MM_DEMOTION_DEAD, "mm/demotion:offline",
 					NULL, migration_offline_cpu);
 	/*
