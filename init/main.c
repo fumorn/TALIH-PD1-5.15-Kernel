@@ -1470,6 +1470,9 @@ __setup("rodata=", set_debug_rodata);
 #ifdef CONFIG_STRICT_KERNEL_RWX
 static void mark_readonly(void)
 {
+	pr_info("DBG-BOOT: mark_readonly bypassed\n");
+	return;
+/* bypass */
 	if (rodata_enabled) {
 		/*
 		 * load_module() results in W+X mappings, which are cleaned
@@ -1520,8 +1523,7 @@ static int __ref kernel_init(void *unused)
 	pr_info("DBG-BOOT: before free_initmem\n");
 	free_initmem();
 	pr_info("DBG-BOOT: after free_initmem\n");
-	pr_info("DBG-BOOT: skip mark_readonly (bypass)\n");
-	/* mark_readonly(); */
+	mark_readonly();
 	pr_info("DBG-BOOT: after mark_readonly\n");
 
 	/*
