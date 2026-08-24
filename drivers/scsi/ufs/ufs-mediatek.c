@@ -3159,7 +3159,12 @@ static int ufs_mtk_device_reset(struct ufs_hba *hba)
 	/* Some devices may need time to respond to rst_n */
 	usleep_range(10000, 15000);
 
-	dev_info(hba->dev, "device reset done\n");
+	{
+		extern int ufs_dbg_irq_hits;
+
+		dev_info(hba->dev, "device reset done; irq_hits=%d\n",
+			 ufs_dbg_irq_hits);
+	}
 
 	return 0;
 }
