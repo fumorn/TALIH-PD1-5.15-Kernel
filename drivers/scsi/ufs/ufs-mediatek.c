@@ -2301,8 +2301,9 @@ static int ufs_mtk_init(struct ufs_hba *hba)
 	if (host->mphy_reset)
 		ufs_mtk_mphy_ctrl(UFS_MPHY_BACKUP, res);
 
-	/* Enable runtime autosuspend */
-	hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
+	/* MT6771 bring-up: keep link always on; runtime suspend puts the
+	 * MPHY into deep-hibernation and resume is not verified yet.
+	 */
 
 	/* Enable clock-gating */
 	hba->caps |= UFSHCD_CAP_CLK_GATING;
