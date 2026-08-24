@@ -1461,6 +1461,13 @@ static noinline void __init kernel_init_freeable(void);
 static void dbg_reboot_fn(struct work_struct *work);
 static DECLARE_DELAYED_WORK(dbg_reboot_work, dbg_reboot_fn);
 
+static int dbg_spin_fn(void *unused)
+{
+	while (!kthread_should_stop())
+		cpu_relax();
+	return 0;
+}
+
 #if defined(CONFIG_STRICT_KERNEL_RWX) || defined(CONFIG_STRICT_MODULE_RWX)
 bool rodata_enabled __ro_after_init = true;
 static int __init set_debug_rodata(char *str)
@@ -1673,6 +1680,12 @@ static noinline void __init kernel_init_freeable(void)
 	 */
 	schedule_delayed_work(&dbg_reboot_work, 60 * HZ);
 	pr_info("DBG-BOOT: auto-reboot scheduled in 60s\n");
+
+	/* DBG: keep one CPU busy to test whether SPM deep-idle gating
+	 * (firmware-driven, no kernel votes) kills in-flight UFS UPIUs.
+	 */
+	kthread_run(dbg_spin_fn, NULL, "dbg-spin");
+	pr_info("DBG-BOOT: busy-spin thread started\n");
 }
 
 static void dbg_reboot_fn(struct work_struct *work)
