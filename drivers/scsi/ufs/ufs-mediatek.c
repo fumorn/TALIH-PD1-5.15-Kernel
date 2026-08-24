@@ -504,6 +504,7 @@ static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
 }
 
 #define MTK_SIP_KERNEL_HW_FDE_UFS_CTL_LEGACY	0x82000270
+#define UFS_MTK_PA_SCRAMBLING			0x1585
 
 static void ufs_mtk_crypto_enable(struct ufs_hba *hba)
 {
@@ -3106,7 +3107,7 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
 		return ret;
 
 	/* MT6771: 4.14 explicitly disables scrambling before link startup */
-	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_SCRAMBLING), 0);
+	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(UFS_MTK_PA_SCRAMBLING), 0);
 	dev_info(hba->dev, "UFSDBG: pre_link scrambling off ret=%d\n", ret);
 
 	return ret;
