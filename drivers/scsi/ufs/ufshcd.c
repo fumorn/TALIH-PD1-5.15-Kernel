@@ -3025,8 +3025,14 @@ static int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
 
 	ufshcd_add_query_upiu_trace(hba, UFS_QUERY_SEND, lrbp->ucd_req_ptr);
 
+	dev_info(hba->dev, "UFSDBG-CMD: send tag=%d type=%d\n", tag, cmd_type);
 	ufshcd_send_command(hba, tag);
 	err = ufshcd_wait_for_dev_cmd(hba, lrbp, timeout);
+	if (err)
+		dev_info(hba->dev,
+			 "UFSDBG-CMD: tag=%d err=%d db=0x%x outst=0x%lx\n", tag, err,
+			 ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL),
+			 hba->outstanding_reqs);
 	ufshcd_add_query_upiu_trace(hba, err ? UFS_QUERY_ERR : UFS_QUERY_COMP,
 				    (struct utp_upiu_req *)lrbp->ucd_rsp_ptr);
 
@@ -5375,6 +5381,8 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			update_scaling = true;
 		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
 			lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
+			dev_info(hba->dev, "UFSDBG-CMD: compl idx=%d type=%d\n",
+				 index, lrbp->command_type);
 			if (hba->dev_cmd.complete) {
 				trace_android_vh_ufs_compl_command(hba, lrbp);
 				ufshcd_add_command_trace(hba, index,
