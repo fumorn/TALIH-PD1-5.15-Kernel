@@ -2959,6 +2959,19 @@ static int ufshcd_wait_for_dev_cmd(struct ufs_hba *hba,
 	time_left = wait_for_completion_timeout(hba->dev_cmd.complete,
 			msecs_to_jiffies(max_timeout));
 
+	if (!time_left) {
+		/* MT6771 bring-up: poll the doorbell once; if the device
+		 * completed but the interrupt was never delivered, claim it.
+		 */
+		dev_info(hba->dev, "UFSDBG-CMD: timeout tag=%d, polling db\n",
+			 lrbp->task_tag);
+		ufshcd_transfer_req_compl(hba, false);
+		time_left = wait_for_completion_timeout(hba->dev_cmd.complete,
+				msecs_to_jiffies(200));
+		dev_info(hba->dev, "UFSDBG-CMD: after poll time_left=%lu\n",
+			 time_left);
+	}
+
 	spin_lock_irqsave(hba->host->host_lock, flags);
 	hba->dev_cmd.complete = NULL;
 	if (likely(time_left)) {
