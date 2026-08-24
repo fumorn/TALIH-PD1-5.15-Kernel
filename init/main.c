@@ -97,6 +97,8 @@
 #include <linux/rodata_test.h>
 #include <linux/jump_label.h>
 #include <linux/mem_encrypt.h>
+#include <linux/reboot.h>
+#include <linux/workqueue.h>
 #include <linux/kcsan.h>
 #include <linux/init_syscalls.h>
 #include <linux/stackdepot.h>
@@ -1456,6 +1458,9 @@ static int try_to_run_init_process(const char *init_filename)
 
 static noinline void __init kernel_init_freeable(void);
 
+static void dbg_reboot_fn(struct work_struct *work);
+static DECLARE_DELAYED_WORK(dbg_reboot_work, dbg_reboot_fn);
+
 #if defined(CONFIG_STRICT_KERNEL_RWX) || defined(CONFIG_STRICT_MODULE_RWX)
 bool rodata_enabled __ro_after_init = true;
 static int __init set_debug_rodata(char *str)
@@ -1662,4 +1667,17 @@ static noinline void __init kernel_init_freeable(void)
 
 	integrity_load_keys();
 	pr_info("DBG-BOOT: after integrity_load_keys\n");
+
+	/* DBG: force a controlled reboot after 60s so ramoops logs are
+	 * guaranteed to be captured even if userspace hangs at the logo.
+	 */
+	schedule_delayed_work(&dbg_reboot_work, 60 * HZ);
+	pr_info("DBG-BOOT: auto-reboot scheduled in 60s\n");
 }
+
+static void dbg_reboot_fn(struct work_struct *work)
+{
+	pr_info("DBG-BOOT: 60s elapsed, forcing restart for log capture\n");
+	kernel_restart("dbg-reboot");
+}
+static DECLARE_DELAYED_WORK(dbg_reboot_work, dbg_reboot_fn);
