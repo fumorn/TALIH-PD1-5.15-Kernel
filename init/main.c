@@ -1680,4 +1680,3 @@ static void dbg_reboot_fn(struct work_struct *work)
 	pr_info("DBG-BOOT: 60s elapsed, forcing restart for log capture\n");
 	kernel_restart("dbg-reboot");
 }
-static DECLARE_DELAYED_WORK(dbg_reboot_work, dbg_reboot_fn);
