@@ -503,7 +503,7 @@ static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
 	}
 }
 
-#define MTK_SIP_KERNEL_HW_FDE_UFS_CTL_LEGACY	0x82000270
+#define MTK_SIP_KERNEL_HW_FDE_UFS_CTL_LEGACY	0xC2000270
 #define UFS_MTK_PA_SCRAMBLING			0x1585
 
 static void ufs_mtk_crypto_enable(struct ufs_hba *hba)
