@@ -3133,8 +3133,8 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
 
 	if (err) {
 		dev_err(hba->dev,
-			"%s: Sending flag query for idn %d failed, err = %d\n",
-			__func__, idn, err);
+			"%s: Sending flag query for idn %d failed, err = %d, irq_hits=%d, irq=%d\n",
+			__func__, idn, err, ufs_dbg_irq_hits, hba->irq);
 		goto out_unlock;
 	}
 
