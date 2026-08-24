@@ -3881,12 +3881,11 @@ skip_phy:
 		goto out;
 	}
 
-	/* set affinity to cpu3 */
+	/* MT6771 bring-up: do not pin the irq to CPU3; leave default
+	 * routing while interrupt delivery on cluster1 is unverified.
+	 */
 	hba = platform_get_drvdata(pdev);
-	if (hba && hba->irq)
-		irq_set_affinity_hint(hba->irq, get_cpu_mask(3));
 
-	ufs_mtk_mcq_set_irq_affinity(hba);
 
 	if ((phy_node) && (phy_dev)) {
 		host = ufshcd_get_variant(hba);
