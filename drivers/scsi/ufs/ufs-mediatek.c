@@ -503,15 +503,23 @@ static void ufs_mtk_cfg_unipro_cg(struct ufs_hba *hba, bool enable)
 	}
 }
 
+#define MTK_SIP_KERNEL_HW_FDE_UFS_CTL_LEGACY	0x82000270
+
 static void ufs_mtk_crypto_enable(struct ufs_hba *hba)
 {
 	struct arm_smccc_res res;
 
 	ufs_mtk_crypto_ctrl(res, 1);
 	if (res.a0) {
-		dev_info(hba->dev, "%s: crypto enable failed, err: %lu\n",
-			 __func__, res.a0);
-		hba->caps &= ~UFSHCD_CAP_CRYPTO;
+		/* MT6771-era ATF: crypto restore lives in the legacy
+		 * HW_FDE_UFS_CTL call (0x270), not MTK_SIP_UFS_CONTROL.
+		 */
+		arm_smccc_smc(MTK_SIP_KERNEL_HW_FDE_UFS_CTL_LEGACY,
+			      (1 << 2), 0, 0, 0, 0, 0, 0, &res);
+		dev_info(hba->dev, "UFSDBG: legacy crypto restore a0=0x%lx\n",
+			 res.a0);
+		if (res.a0)
+			hba->caps &= ~UFSHCD_CAP_CRYPTO;
 	}
 }
 
@@ -3094,6 +3102,12 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
 	tmp &= ~(1 << 6);
 
 	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(VS_SAVEPOWERCONTROL), tmp);
+	if (ret)
+		return ret;
+
+	/* MT6771: 4.14 explicitly disables scrambling before link startup */
+	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_SCRAMBLING), 0);
+	dev_info(hba->dev, "UFSDBG: pre_link scrambling off ret=%d\n", ret);
 
 	return ret;
 }
