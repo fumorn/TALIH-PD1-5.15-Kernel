@@ -2303,10 +2303,8 @@ static int ufs_mtk_init(struct ufs_hba *hba)
 
 	/* MT6771 bring-up: keep link always on; runtime suspend puts the
 	 * MPHY into deep-hibernation and resume is not verified yet.
+	 * Clock gating likewise unverified on this legacy IP.
 	 */
-
-	/* Enable clock-gating */
-	hba->caps |= UFSHCD_CAP_CLK_GATING;
 
 	/* Enable inline encryption */
 	hba->caps |= UFSHCD_CAP_CRYPTO;
