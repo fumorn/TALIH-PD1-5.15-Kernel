@@ -163,7 +163,8 @@
 	ufshci: ufshci@11270000 {
 		compatible = "mediatek,mt8183-ufshci";
 		reg = <0 0x11270000 0 0x2300>;
-		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW 0>;
 
 		phys = <&ufs_mphy>;
 		vcc-supply = <&reg_vemc_fixed>;
