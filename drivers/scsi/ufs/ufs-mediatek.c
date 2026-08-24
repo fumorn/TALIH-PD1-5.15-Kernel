@@ -3114,6 +3114,14 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
 
 static int ufs_mtk_post_link(struct ufs_hba *hba)
 {
+	int ret;
+
+	/* MT6771: 4.14 disables the device-side TX LCC after link startup */
+	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+	dev_info(hba->dev, "UFSDBG: post_link device LCC off ret=%d\n", ret);
+	if (ret)
+		dev_err(hba->dev, "dme_setting_after_link fail\n");
+
 	/* enable unipro clock gating feature */
 	ufs_mtk_cfg_unipro_cg(hba, true);
 
