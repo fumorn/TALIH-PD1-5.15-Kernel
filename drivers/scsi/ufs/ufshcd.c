@@ -3048,6 +3048,13 @@ static int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
 			 "UFSDBG-CMD: tag=%d err=%d db=0x%x outst=0x%lx\n", tag, err,
 			 ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL),
 			 hba->outstanding_reqs);
+		dev_info(hba->dev,
+			 "UFSDBG-CMD: UIC err: PA=0x%x DL=0x%x NL=0x%x TL=0x%x DME=0x%x\n",
+			 ufshcd_readl(hba, REG_UIC_ERROR_CODE_PHY_ADAPTER_LAYER),
+			 ufshcd_readl(hba, REG_UIC_ERROR_CODE_DATA_LINK_LAYER),
+			 ufshcd_readl(hba, REG_UIC_ERROR_CODE_NETWORK_LAYER),
+			 ufshcd_readl(hba, REG_UIC_ERROR_CODE_TRANSPORT_LAYER),
+			 ufshcd_readl(hba, REG_UIC_ERROR_CODE_DME));
 	ufshcd_add_query_upiu_trace(hba, err ? UFS_QUERY_ERR : UFS_QUERY_COMP,
 				    (struct utp_upiu_req *)lrbp->ucd_rsp_ptr);
 
