@@ -6579,6 +6579,9 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
 
 	ufs_dbg_irq_hits++;
 	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+	if (ufs_dbg_irq_hits <= 20)
+		dev_info(hba->dev, "UFSDBG-IRQ: hit=%d IS=0x%x\n",
+			 ufs_dbg_irq_hits, intr_status);
 	hba->ufs_stats.last_intr_status = intr_status;
 	hba->ufs_stats.last_intr_ts = ktime_get();
 
