@@ -225,6 +225,9 @@ static struct ufs_dev_fix ufs_fixups[] = {
 	END_FIX
 };
 
+int ufs_dbg_irq_hits;
+EXPORT_SYMBOL_GPL(ufs_dbg_irq_hits);
+
 static irqreturn_t ufshcd_tmc_handler(struct ufs_hba *hba);
 static void ufshcd_async_scan(void *data, async_cookie_t cookie);
 static int ufshcd_reset_and_restore(struct ufs_hba *hba);
@@ -6563,9 +6566,6 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
  *  IRQ_HANDLED - If interrupt is valid
  *  IRQ_NONE    - If invalid interrupt
  */
-int ufs_dbg_irq_hits;
-EXPORT_SYMBOL_GPL(ufs_dbg_irq_hits);
-
 static irqreturn_t ufshcd_intr(int irq, void *__hba)
 {
 	u32 intr_status, enabled_intr_status = 0;
