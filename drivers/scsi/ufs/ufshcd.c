@@ -228,6 +228,8 @@ static struct ufs_dev_fix ufs_fixups[] = {
 int ufs_dbg_irq_hits;
 EXPORT_SYMBOL_GPL(ufs_dbg_irq_hits);
 
+static irqreturn_t ufshcd_transfer_req_compl(struct ufs_hba *hba,
+					     bool retry_requests);
 static irqreturn_t ufshcd_tmc_handler(struct ufs_hba *hba);
 static void ufshcd_async_scan(void *data, async_cookie_t cookie);
 static int ufshcd_reset_and_restore(struct ufs_hba *hba);
