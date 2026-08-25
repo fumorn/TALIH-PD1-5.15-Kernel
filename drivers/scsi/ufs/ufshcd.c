@@ -2165,6 +2165,8 @@ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
 	if (hba->vops && hba->vops->setup_xfer_req)
 		hba->vops->setup_xfer_req(hba, task_tag, !!lrbp->cmd);
 	__set_bit(task_tag, &hba->outstanding_reqs);
+	/* MT6771 requires descriptors to be visible before ringing DB. */
+	wmb();
 	ufshcd_writel(hba, 1 << task_tag, REG_UTP_TRANSFER_REQ_DOOR_BELL);
 	spin_unlock_irqrestore(&hba->outstanding_lock, flags);
 
